@@ -34,7 +34,7 @@ begin
       if @KFS_Version >= 30
       begin
          if @KFS_LicenseMode = 'R'
-            --REMOVED THE LINE BY PDA
+            exec @ProcName @Bonds_Id, @TradeDate, 0, @OutValue output, @InternalKey
          else
             exec @ProcName @Bonds_Id, @TradeDate, 0, @OutValue output
       end
