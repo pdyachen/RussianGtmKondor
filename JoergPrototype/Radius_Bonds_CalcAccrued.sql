@@ -41,16 +41,20 @@ begin
       else
       begin
          if @KFS_LicenseMode = 'R'
-            exec @ProcName @Bonds_Id, @TradeDate,    @OutValue output, @InternalKey
+         --REMOVING THE NEXT LINE BY PDA
+            
          else
             exec @ProcName @Bonds_Id, @TradeDate,    @OutValue output
       end
    end
    else begin
+   /*
+   branching testing by PDA !
+   */
       select @ProcName = @ProcName + '...FI_Bonds_Accrued_by_Date'
       if @KFS_Version >= 30
       begin
-         if @KFS_LicenseMode = 'R'
+         if @KFS_LicePDATESTMode = 'R'
             exec @ProcName @Bonds_Id, @ValueDate, @SettlDate, 0, @OutValue output, @InternalKey
          else
             exec @ProcName @Bonds_Id, @ValueDate, @SettlDate, 0, @OutValue output
