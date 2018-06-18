@@ -46,6 +46,9 @@ begin
             exec @ProcName @Bonds_Id, @TradeDate,    @OutValue output
       end
    end
+   /*
+ADDING SOME STAFF
+   */
    else begin
       select @ProcName = @ProcName + '...FI_Bonds_Accrued_by_Date'
       if @KFS_Version >= 30
