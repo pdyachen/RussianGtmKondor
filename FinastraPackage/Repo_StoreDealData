@@ -1,0 +1,207 @@
+/*---------------------------------------------------------------------*/
+/*    Repo_StoreDealData                                               */
+/*---------------------------------------------------------------------*/
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'Repo_StoreDealData' AND type = 'P')
+DROP PROC Repo_StoreDealData
+GO
+
+CREATE PROC Repo_StoreDealData(
+@Pid                         int ,
+@Trigger                     varchar(10),
+@Deals_Id                    int ,
+@TradeDate                   datetime    ,
+@ValueDate                       datetime,
+@SettlementDate1                 datetime  ,
+@MaturityDate                    datetime    ,
+@SettlementDate2                 datetime     ,
+@Folders_Id                      int           ,
+@Cpty_Id                         int            ,
+@Currencies_Id_Deal              int             ,
+@Currencies_Id_Price             int             ,
+@DealType                        varchar(1)      ,
+@RepoType                        varchar(10)     ,
+@TypeOfInstr_Id                  int             ,
+@Bonds_Id                        int             ,
+@ClearingModes_Id                int             ,
+@TradingPlace                    varchar(12)     ,
+@FwdPriceMethod                  varchar(12)     ,
+-- @ISIN                            varchar(32)     ,
+@FaceAmount                      float           ,
+@Quantity                        float           ,
+@CouponTo                        varchar(1)      ,
+@Discount                        float           ,
+@Haircut                         float           ,
+@FixedRate                       float           ,
+@ClMargin                        float           ,
+-- @ClRate                          float           ,
+@Basis                           varchar(1)      ,
+@Price                           float           ,
+@Accrued                         float           ,
+@DirtyPrice                      float           ,
+@AccruedCash                     float           ,
+@GrossAmount                     float           ,
+@WeightedAmount                  float           ,
+@ForwardPrice                    float           ,
+@ForwardAccrued                  float           ,
+@ForwardDirtyPrice               float           ,
+@ForwardAccruedCash              float           ,
+@ForwardGrossAmount              float           ,
+@ForwardAmount                   float           ,
+@Delivery1                       varchar(10)     ,
+@Delivery2                       varchar(10)     ,
+@ConversionRate float ,
+@NeedsPrepayment varchar(1) ,
+@Prepayment float 
+
+)
+AS
+BEGIN
+
+-- RETURN
+
+Declare @Max int,
+	@RepoDeals_Id int,
+	@ISIN varchar(32),
+	@ClRate float
+
+SELECT @Max = max(RepoDeals_Id) FROM kplus..RepoDeals
+
+SELECT @RepoDeals_Id = @Max + 1
+
+SELECT @ClRate = @FixedRate + @ClMargin / 100.00
+
+SELECT @ISIN = "-"
+
+--SELECT "Pid"=@Pid
+--SELECT "Trig"=@Trigger
+ 
+--SELECT Comments="P:"+convert(varchar(8),@Pid)+" T:"+@Trigger+" D:"+convert(varchar(8),@Deals_Id)
+
+--DELETE FROM RussianReposCashFlows
+--WHERE Pid=@Pid
+
+
+INSERT RussianRepoDeals
+SELECT 
+@RepoDeals_Id              ,
+--@Pid,
+@TradeDate                 ,
+@ValueDate                ,
+@SettlementDate1           ,
+@MaturityDate                  ,
+@SettlementDate2        ,
+@Folders_Id                     ,
+@Cpty_Id                     ,
+@Currencies_Id_Deal           ,
+@Currencies_Id_Price         ,
+@DealType                      ,
+@RepoType                     ,
+@TypeOfInstr_Id                 ,
+@Bonds_Id                     ,
+@ClearingModes_Id              ,
+@TradingPlace                    ,
+@FwdPriceMethod               ,
+@ISIN                           ,
+@FaceAmount                     ,
+@Quantity                     ,
+@CouponTo                       ,
+@Discount                      ,
+@Haircut                    ,
+@FixedRate                     ,
+@ClMargin                      ,
+ @ClRate                         ,
+@Basis                           ,
+@Price                          ,
+@Accrued                         ,
+@DirtyPrice                     ,
+@AccruedCash                    ,
+@GrossAmount                    ,
+@WeightedAmount                ,
+@ForwardPrice                    ,
+@ForwardAccrued                 ,
+@ForwardDirtyPrice               ,
+@ForwardAccruedCash             ,
+@ForwardGrossAmount           ,
+@ForwardAmount                   ,
+@Delivery1                      ,
+@Delivery2                       ,
+@ConversionRate ,
+@NeedsPrepayment ,
+@Prepayment 
+
+
+
+/*
+
+CREATE table RussianRepoDeals
+(
+RepoDeals_Id                    int             not ,
+TradeDate                       datetime        ,
+ValueDate                       datetime        ,
+SettlementDate1                 datetime        ,
+MaturityDate                    datetime        ,
+SettlementDate2                 datetime        ,
+Folders_Id                      int             ,
+Cpty_Id                         int             ,
+Currencies_Id_Deal              int             ,
+Currencies_Id_Price             int             ,
+DealType                        varchar(1)      ,
+RepoType                        varchar(10)     ,
+TypeOfInstr_Id                  int             ,
+Bonds_Id                        int             ,
+ClearingModes_Id                int             ,
+TradingPlace                    varchar(12)     ,
+FwdPriceMethod                  varchar(12)     ,
+ISIN                            varchar(32)     ,
+FaceAmount                      float           ,
+Quantity                        float           ,
+CouponTo                        varchar(1)      ,
+Discount                        float           ,
+Haircut                         float           ,
+FixedRate                       float           ,
+ClMargin                        float           ,
+ClRate                          float           ,
+Basis                           varchar(1)      ,
+Price                           float           ,
+Accrued                         float           ,
+DirtyPrice                      float           ,
+AccruedCash                     float           ,
+GrossAmount                     float           ,
+WeightedAmount                  float           ,
+ForwardPrice                    float           ,
+ForwardAccrued                  float           ,
+ForwardDirtyPrice               float           ,
+ForwardAccruedCash              float           ,
+ForwardGrossAmount              float           ,
+ForwardAmount                   float           ,
+Delivery1                       varchar(10)     ,
+Delivery2                       varchar(10)     ,
+ConversionRate float ,
+NeedsPrepayment varchar(1) ,
+Prepayment float 
+)
+
+
+*/
+
+Declare @Message varchar(20)
+SELECT @Message = convert(varchar(20), @FixedRate)
+ -- exec kplus..SendMail "KPLUS", "KPLUS", @Message
+
+
+
+END
+
+
+
+
+
+
+GO
+
+GRANT EXEC on Repo_StoreDealData to PUBLIC
+GO
+
+/*-------------------------------- END --------------------------------*/
+
