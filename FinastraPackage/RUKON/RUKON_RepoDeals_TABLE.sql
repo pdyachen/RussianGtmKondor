@@ -10,7 +10,7 @@ go
 /*-------------------------------------------------*/
 
 /*------------------------------------------------- 
-		RussianReposData
+		RUKON_RepoDeals
 ---------------------------------------------------*/
 
 
@@ -21,13 +21,13 @@ IF EXISTS
 (
 	SELECT name 
 	FROM   sysobjects 
-	WHERE  name = 'RussianReposData' AND type = 'U' 
+	WHERE  name = 'RUKON_RepoDeals' AND type = 'U' 
 )
-	DROP table RussianReposData 
+	DROP table RUKON_RepoDeals 
 go
 
 
-CREATE table RussianReposData
+CREATE table RUKON_RepoDeals
 (
 DealType                        varchar(32)     not null,
 DealId                          int             not null,
@@ -73,7 +73,8 @@ CurFA                           varchar(3)      null,
 Currencies_Id                   int             null,
 Cpty_Id                         int             null,
 RRPid                           int             null,
-RRDFUpd                         varchar(1)      null 
+RRDFUpd                         varchar(1)      null,
+PriceCw                         int             null 
 )
 LOCK DATAROWS
 
@@ -81,7 +82,7 @@ LOCK DATAROWS
 
 /*--- INDEXES -------------------------------------*/
 
-CREATE  INDEX RussianReposDataIdx1 ON RussianReposData 
+CREATE  INDEX RUKON_RepoDealsIdx1 ON RUKON_RepoDeals 
 (
 	DealType,
 	DealId 
@@ -90,7 +91,7 @@ CREATE  INDEX RussianReposDataIdx1 ON RussianReposData
 
 go
 
-GRANT ALL ON RussianReposData TO PUBLIC 
+GRANT ALL ON RUKON_RepoDeals TO PUBLIC 
 go
 
 
@@ -102,13 +103,13 @@ IF EXISTS
 (
 	SELECT name 
 	FROM   sysobjects 
-	WHERE  name = 'KustomRussianReposDataVer' AND type = 'U'
+	WHERE  name = 'KustomRUKON_RepoDealsVer' AND type = 'U'
 )
-	DROP table KustomRussianReposDataVer 
+	DROP table KustomRUKON_RepoDealsVer 
 go
 
 
-CREATE table KustomRussianReposDataVer
+CREATE table KustomRUKON_RepoDealsVer
 (
 TransactionId                   int             not null,
 DealType                        varchar(32)     not null,
@@ -156,8 +157,9 @@ Currencies_Id                   int             null,
 Cpty_Id                         int             null,
 RRPid                           int             null,
 RRDFUpd                         varchar(1)      null,
+PriceCw                         int             null,
 VersionStartDate                datetime        not null,
-VersionEndDate                  datetime        not null
+VersionEndDate                  datetime        not null,
 )
 LOCK DATAROWS
 
@@ -165,25 +167,25 @@ LOCK DATAROWS
 
 /*--- INDEXES -------------------------------------*/
 
-CREATE UNIQUE INDEX KustomRussianReposDataVerIdx1 ON KustomRussianReposDataVer 
+CREATE UNIQUE INDEX KustomRUKON_RepoDealsVerIdx1 ON KustomRUKON_RepoDealsVer 
 (
 	TransactionId,
 	DealType,
 	DealId
 )
 
-CREATE INDEX KustomRussianReposDataVerIdx2 ON KustomRussianReposDataVer 
+CREATE INDEX KustomRUKON_RepoDealsVerIdx2 ON KustomRUKON_RepoDealsVer 
 (
 	VersionStartDate
 )
 
-CREATE INDEX KustomRussianReposDataVerIdx3 ON KustomRussianReposDataVer 
+CREATE INDEX KustomRUKON_RepoDealsVerIdx3 ON KustomRUKON_RepoDealsVer 
 (
 	VersionEndDate
 )
 
 
-GRANT ALL ON KustomRussianReposDataVer TO PUBLIC 
+GRANT ALL ON KustomRUKON_RepoDealsVer TO PUBLIC 
 go
 
 
@@ -195,13 +197,13 @@ IF EXISTS
 (
 	SELECT name 
 	FROM   sysobjects 
-	WHERE  name = 'KustomRussianReposDataMvts' AND type = 'U'
+	WHERE  name = 'KustomRUKON_RepoDealsMvts' AND type = 'U'
 )
-	DROP table KustomRussianReposDataMvts 
+	DROP table KustomRUKON_RepoDealsMvts 
 go
 
 
-CREATE table KustomRussianReposDataMvts
+CREATE table KustomRUKON_RepoDealsMvts
 (
 TransactionId                   int             not null,
 Action                          char(1)         not null,
@@ -250,16 +252,17 @@ CurFA_                          varchar(3)      null,
 Currencies_Id_                  int             null,
 Cpty_Id_                        int             null,
 RRPid_                          int             null,
-RRDFUpd_                        varchar(1)      null
+RRDFUpd_                        varchar(1)      null,
+PriceCw                         int             null
 )
 LOCK DATAROWS
 
 
-GRANT ALL ON KustomRussianReposDataMvts TO PUBLIC 
+GRANT ALL ON KustomRUKON_RepoDealsMvts TO PUBLIC 
 go
 
 /*------------------------------------------------- 
-		KustomRussianReposDataMvts_insert
+		KustomRUKON_RepoDealsMvts_insert
 ---------------------------------------------------*/
 
 
@@ -270,9 +273,9 @@ IF EXISTS
 (
 	SELECT name 
 	FROM   sysobjects 
-	WHERE  name = 'KustomRussianReposDataMvts_insert' AND type = 'P' 
+	WHERE  name = 'KustomRUKON_RepoDealsMvts_insert' AND type = 'P' 
 )
-	DROP PROC KustomRussianReposDataMvts_insert 
+	DROP PROC KustomRUKON_RepoDealsMvts_insert 
 go
 
 
@@ -280,7 +283,7 @@ go
 
 
 
-CREATE PROCEDURE KustomRussianReposDataMvts_insert (@TableId int, @RowId int, @DealType varchar(32), @Action char(1) ) as
+CREATE PROCEDURE KustomRUKON_RepoDealsMvts_insert (@TableId int, @RowId int, @DealType varchar(32), @Action char(1) ) as
 BEGIN
 DECLARE @MvtId numeric(20), @TransId int, @ret_value int
 SELECT @MvtId = 0, @TransId = 0, @ret_value = 0
@@ -299,8 +302,8 @@ EXECUTE kplus.dbo.KLSDealsInfo_getTransId @TableId, @RowId, @Action, @TransId ou
 IF (@TransId = 0 OR @TransId = NULL) 
 RETURN -1
 END 
-INSERT Kustom.dbo.KustomRussianReposDataMvts SELECT @TransId, @Action, @MvtId, F.DealType, F.DealId, F.RepoType, F.DirtyPrice, F.AccruedCash, F.Accrued2, F.Accrued2Cash, F.DirtyPrice2, F.Prepayment, F.NeedPrepayment, F.Discount, F.FixedRate2, F.ForwardPrice2, F.FwdPriceMethod, F.GrossAmount2, F.ForwardAmount2, F.DeliveryCondition1, F.DeliveryCondition2, F.AgreementPrepare, F.DeliveryActive, F.DeliveryExpensePayer, F.SettlementDate, F.SettlementDate2, F.TradingPlace, F.MarginCallTrigger, F.Haircut2, F.CapturedDiscount, F.MarginCallMethod, F.MarginCallLower, F.MarginCallUpper, F.MarginCallKnockOut, F.ToBeProcessed, F.WeightedAmount, F.GrossAmount1, F.Accrued, F.CurAccr1, F.CurAccr2, F.CurGA1, F.CurGA2, F.CurWA, F.CurFA, F.Currencies_Id, F.Cpty_Id, F.RRPid, F.RRDFUpd
-FROM Kustom.dbo.RussianReposData F
+INSERT Kustom.dbo.KustomRUKON_RepoDealsMvts SELECT @TransId, @Action, @MvtId, F.DealType, F.DealId, F.RepoType, F.DirtyPrice, F.AccruedCash, F.Accrued2, F.Accrued2Cash, F.DirtyPrice2, F.Prepayment, F.NeedPrepayment, F.Discount, F.FixedRate2, F.ForwardPrice2, F.FwdPriceMethod, F.GrossAmount2, F.ForwardAmount2, F.DeliveryCondition1, F.DeliveryCondition2, F.AgreementPrepare, F.DeliveryActive, F.DeliveryExpensePayer, F.SettlementDate, F.SettlementDate2, F.TradingPlace, F.MarginCallTrigger, F.Haircut2, F.CapturedDiscount, F.MarginCallMethod, F.MarginCallLower, F.MarginCallUpper, F.MarginCallKnockOut, F.ToBeProcessed, F.WeightedAmount, F.GrossAmount1, F.Accrued, F.CurAccr1, F.CurAccr2, F.CurGA1, F.CurGA2, F.CurWA, F.CurFA, F.Currencies_Id, F.Cpty_Id, F.RRPid, F.RRDFUpd, F.PriceCw
+FROM Kustom.dbo.RUKON_RepoDeals F
 WHERE F.DealId = @RowId AND F.DealType = @DealType 
 END 
 RETURN 0
@@ -311,6 +314,6 @@ go
 
 
 
-GRANT EXEC ON KustomRussianReposDataMvts_insert TO PUBLIC 
+GRANT EXEC ON KustomRUKON_RepoDealsMvts_insert TO PUBLIC 
 go
 

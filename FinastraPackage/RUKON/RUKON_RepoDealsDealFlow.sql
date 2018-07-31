@@ -1,21 +1,38 @@
-/*---------------------------------------------------------------------*/
-/*    DFRepoSchedUpdate                                                */
-/*---------------------------------------------------------------------*/
+/*-------------------------------------------------*/
+/*--- Initialization Part -------------------------*/
+/*-------------------------------------------------*/
 
-IF EXISTS (SELECT name FROM sysobjects WHERE name = 'DFRepoSchedUpdate' AND type = 'P')
-DROP PROC DFRepoSchedUpdate
-GO
+USE kplus
+go
+/*------------------------------------------------- 
+		RUKON_RepoDealsDealFlow
+---------------------------------------------------*/
+
+
+USE Kustom
+go
+
+IF EXISTS 
+(
+	SELECT name 
+	FROM   sysobjects 
+	WHERE  name = 'RUKON_RepoDealsDealFlow' AND type = 'P' 
+)
+	DROP PROC RUKON_RepoDealsDealFlow 
+go
 
 
 
-CREATE PROC DFRepoSchedUpdate (@DealId int)
+
+
+CREATE PROC RUKON_RepoDealsDealFlow (@DealId int)
 AS
 BEGIN
 
 DECLARE @RRDFUpd varchar(1)
-select @RRDFUpd=RRDFUpd from Kustom..RussianReposData where DealId=@DealId
+select @RRDFUpd=RRDFUpd from Kustom..RUKON_RepoDeals where DealId=@DealId
 IF @RRDFUpd != 'N'
-RETURN
+   RETURN
 
 --IF  EXISTS (SELECT Status FROM RepoGen Where DealId = @DealId ) 
 --RETURN
@@ -35,12 +52,12 @@ DECLARE @MultiplyMargin float
 
 DECLARE @Pid int
 --SELECT @Pid=convert(int, Comments) from kplus..RepoDeals where RepoDeals_Id=@DealId
-SELECT @Pid=RRPid from Kustom..RussianReposData where DealId=@DealId
+SELECT @Pid=RRPid from Kustom..RUKON_RepoDeals where DealId=@DealId
 
 DECLARE Row CURSOR FOR 
 	SELECT  CashFlowType, Principal, StartDate, EndDate, PaymentDate, CashFlow, Rate
---	FROM RussianReposCashFlows WHERE RepoDeals_Id = @DealId
-	FROM RussianReposCashFlows WHERE Pid = @Pid
+--	FROM RUKON_RepoSchedule WHERE RepoDeals_Id = @DealId
+	FROM RUKON_RepoSchedule WHERE Pid = @Pid
 	ORDER BY PaymentDate, CashFlowType
 	OPEN Row
 	FETCH Row INTO @CashFlowType, @Principal, @StartDate, @EndDate, @PaymentDate, @CashFlow,
@@ -82,7 +99,7 @@ SELECT 'RepoSchedule', 'Number', @Row
 
 SELECT '','TradeKast','Y'
 SELECT 'TradeKast_RREPO', 'RRDFUpd','Y'
-SELECT 'RepoDeals', 'Comments', 'DF updated3'
+SELECT 'RepoDeals', 'Comments', 'Dealflow '+convert(varchar(10),@DealId)
 
 
 
@@ -142,10 +159,12 @@ END
 
 
 
-GO
 
-GRANT EXEC on DFRepoSchedUpdate to PUBLIC
-GO
 
-/*-------------------------------- END --------------------------------*/
+go
+
+
+
+GRANT EXEC ON RUKON_RepoDealsDealFlow TO PUBLIC 
+go
 

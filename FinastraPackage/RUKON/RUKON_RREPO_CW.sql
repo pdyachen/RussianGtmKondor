@@ -105,12 +105,12 @@ IF EXISTS
 	WHERE  Codifiers_Id = @Codifiers_Id AND KdbTables_Id = @ETOD_Id AND TypeOfDealsOrigin = 'N'
 
 
-INSERT kplus..CustomWindow VALUES ( @Codifiers_Id, @ETOD_Id, 'N', 'Y', 'KustomRussianReposData', 
+INSERT kplus..CustomWindow VALUES ( @Codifiers_Id, @ETOD_Id, 'N', 'N', 'KustomRUKON_RepoDeals', 
 'NEXT_Client:0
 Name:RREPO
 Action:@KdbTables_Id_ETOD
 TOD_origin:N
-Label:RussianReposData
+Label:RUKON_RepoDeals
 Scrollbars:0
 Width:800
 Height:400
@@ -120,7 +120,7 @@ Store:1
 SendMsg:1
 Seconds:0
 Prolong:1
-ReadOnly:0
+ReadOnly:1
 Mandatory:0
 Color1:0
 Color2:1
@@ -132,7 +132,7 @@ Pricing:0
 Hidden:0
 ShareData:0
 Procedure3:StoreDealData
-START_Inquiry:2
+START_Inquiry:1
 X:763
 Y:12
 Name:Calculate
@@ -144,21 +144,6 @@ Color1:0
 Color2:1
 Color3:0
 CaretNumber:35
-Panel:0
-Size:8
-Square:0
-NEXT_Inquiry:0
-X:10
-Y:335
-Name:Load
-Label:Load
-Action:0
-Procedure:LoadDeal
-SendMsg:0
-Color1:0
-Color2:0
-Color3:0
-CaretNumber:43
 Panel:0
 Size:8
 Square:0
@@ -434,8 +419,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:100
-Y:110
+X:107
+Y:116
 Action:S
 Width:14
 Name:FwdPriceMethod
@@ -452,11 +437,12 @@ UpperCase:0
 Color2:0
 CaretNumber:13
 Foreign:1
-Length:4
-Default:MICEX 4 digits
+Length:5
+Default:MOEX 4 digits
 Default:Default
-Default:Nomos
-Default:Alfa
+Default:ZCalypso
+Default:6MOEX 6 digits
+Default:7Bloomberg
 ChoiceDisp:0
 ChoiceReplace:1
 Panel:0
@@ -465,8 +451,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:350
-Y:110
+X:354
+Y:114
 Action:F
 Width:19
 Name:GrossAmount2
@@ -489,8 +475,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:600
-Y:110
+X:602
+Y:112
 Action:F
 Width:19
 Name:ForwardAmount2
@@ -940,8 +926,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:100
-Y:285
+X:102
+Y:287
 Action:F
 Width:19
 Name:GrossAmount1
@@ -964,8 +950,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:350
-Y:285
+X:360
+Y:286
 Action:F
 Width:16
 Name:Accrued
@@ -1103,8 +1089,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:600
-Y:310
+X:569
+Y:311
 Action:T
 Width:3
 Name:CurFA
@@ -1126,33 +1112,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:10
-Y:360
-Action:I
-Width:12
-Name:DealNr
-Label:DealNr
-Procedure:LoadDeal
-SendMsg:0
-Display:0
-Sent:0
-ReadOnly:0
-Mandatory:0
-AlignOnBox:0
-Hidden:0
-UpperCase:0
-Color2:0
-CaretNumber:44
-Default:-999 999 999
-Foreign:0
-Panel:0
-Size:8
-Square:0
-Selector:0
-PanelHeight:0
-NEXT_Input:0
-X:300
-Y:360
+X:663
+Y:338
 Action:I
 Width:15
 Name:BOReference
@@ -1166,7 +1127,7 @@ AlignOnBox:1
 Hidden:0
 UpperCase:0
 Color2:0
-CaretNumber:45
+CaretNumber:43
 Default:-999 999 999.99
 Foreign:0
 Panel:0
@@ -1175,8 +1136,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:452
-Y:362
+X:665
+Y:370
 Action:I
 Width:10
 Name:RRPid
@@ -1190,7 +1151,7 @@ AlignOnBox:0
 Hidden:0
 UpperCase:0
 Color2:0
-CaretNumber:46
+CaretNumber:44
 Default:-999999999
 Foreign:1
 Panel:0
@@ -1199,8 +1160,8 @@ Square:0
 Selector:0
 PanelHeight:0
 NEXT_Input:0
-X:600
-Y:360
+X:703
+Y:294
 Action:C
 Width:1
 Name:RRDFUpd
@@ -1214,17 +1175,41 @@ AlignOnBox:0
 Hidden:0
 UpperCase:0
 Color2:0
-CaretNumber:47
+CaretNumber:45
 Foreign:1
 Panel:0
 Size:8
 Square:0
 Selector:0
 PanelHeight:0
+NEXT_Input:0
+X:549
+Y:370
+Action:F
+Width:9
+Name:PriceCw
+Label:Price
+SendMsg:0
+Display:1
+Sent:0
+ReadOnly:0
+Mandatory:0
+AlignOnBox:0
+Hidden:0
+UpperCase:0
+Color2:0
+CaretNumber:46
+Default:-999.9999
+Foreign:0
+Panel:0
+Size:8
+Square:0
+Selector:0
+PanelHeight:0
 START_Square:0
-START_Help:2
-X:350
-Y:10
+START_Help:3
+X:354
+Y:14
 Procedure4:PriceCur
 Name:kplus..Currencies
 Label:Price Currency
@@ -1290,6 +1275,47 @@ Procedure5:Cpty_ShortName
 Default:Cpty_ShortName
 Action:T
 Width:10
+Display:1
+Store:0
+Sent:0
+Foreign:0
+UpperCase:1
+Panel:0
+Size:8
+Square:0
+RiskSource:1
+IndexType:I
+NEXT_Help:0
+X:16
+Y:370
+Procedure4:CurCw
+Name:kplus..Currencies
+Label:Cur
+Procedure:RepoDealsProcess
+SendMsg:0
+Selector:0
+Procedure2:CurHelp
+Length:2
+ReadOnly:0
+Mandatory:0
+AlignOnBox:0
+Hidden:0
+CaretNumber:47
+PersList:0
+Procedure5:Currencies_Id
+Default:Currencies_Id
+Action:I
+Width:8
+Display:0
+Store:0
+Sent:0
+Foreign:0
+UpperCase:0
+Seconds:99999999
+Procedure5:Cur
+Default:Currencies_ShortName
+Action:T
+Width:3
 Display:1
 Store:0
 Sent:0
@@ -1389,32 +1415,32 @@ NEXT_Foreign:0
 Name:RRDFUpd
 START_Notify:9
 Name:ValueDate
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:MaturityDate
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:Bonds
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:FaceAmount
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:Quantity
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:Price
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:FixedRate
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:Currencies
-Procedure:CalculateValues
+Procedure:RepoDealsProcess
 NEXT_Notify:0
 Name:ConversionRate
-Procedure:CalculateValues
-START_Proc:8
+Procedure:RepoDealsProcess
+START_Proc:11
 Name:Repo_SetSettlementDates
 Label:SetSettlementDates
 Action:D
@@ -1437,12 +1463,13 @@ NEXT_Proc:0
 Name:RepoDealsNotify
 Label:CalculateValues
 Action:D
-Length:22
+Length:23
 Default:Pid
 Default:Trigger
 Default:RowId
 Default:RepoDeals-DealType
 Default:RepoSecuSched-Bonds_Id
+Default:RepoSecuSched-Equities_Id
 Default:RepoDeals-ValueDate
 Default:SettlementDate
 Default:RepoDeals-MaturityDate
@@ -1525,6 +1552,46 @@ Label:SetRate
 Action:D
 Length:1
 Default:FixedRate2
+NEXT_Proc:0
+Name:RUKON_GetSecDetails
+Label:GetSecurityDetails
+Action:H
+Length:1
+Default:RepoDeals-KdbTables_Id_Underlying
+NEXT_Proc:0
+Name:RUKON_RepoDealsProcess
+Label:RepoDealsProcess
+Action:D
+Length:23
+Default:Pid
+Default:Trigger
+Default:RowId
+Default:RepoDeals-DealType
+Default:RepoSecuSched-Bonds_Id
+Default:RepoSecuSched-Equities_Id
+Default:RepoDeals-ValueDate
+Default:SettlementDate
+Default:RepoDeals-MaturityDate
+Default:SettlementDate2
+Default:RepoSecuSched-Price
+Default:RepoSecuSched-Quantity
+Default:Discount
+Default:RepoDeals-FixedRate
+Default:RepoDeals-Basis
+Default:RepoSecuSched-IgnoreCouponPayments
+Default:RepoSecuSched-ReinvCouponRate
+Default:RepoSecuSched-ConversionRate
+Default:NeedPrepayment
+Default:FwdPriceMethod
+Default:Haircut2
+Default:CapturedDiscount
+Default:RepoDeals-Currencies_Id
+NEXT_Proc:0
+Name:RUKON_CurHelp
+Label:CurHelp
+Action:H
+Length:1
+Default:RowId
 ', DEFAULT)
 
 
@@ -1573,7 +1640,7 @@ DECLARE @KdbTables_Id_Kustom int
 
 SELECT @KdbTables_Id_Kustom = T.KdbTables_Id 
 FROM   kplus..KdbTables T 
-WHERE  T.KdbTables_Name    = 'RussianReposData' 
+WHERE  T.KdbTables_Name    = 'RUKON_RepoDeals' 
 AND    T.KdbDatabases_Id   = @KdbDatabases_Id_Kustom 
 
 
@@ -1596,7 +1663,7 @@ DELETE kplus..KdbLocalTablesT
 WHERE KdbLocalTables_Id = @KdbTables_Id_Kustom 
 
 INSERT kplus..KdbLocalTablesT Values (
-@KdbTables_Id_Kustom, 'RussianReposData', 'RussianReposData',  @KdbDatabases_Id_Kustom,  0,  45, 'Q', 'D', 'FOREIGN',  0,  39,  0,  0, 'R', 'N', 'N', 'N', 'R', 'FOREIGN', 'N', 'N', 'N', 'Y',  0,   0,  'N',  2  )
+@KdbTables_Id_Kustom, 'RUKON_RepoDeals', 'RUKON_RepoDeals',  @KdbDatabases_Id_Kustom,  0,  45, 'Q', 'D', 'FOREIGN',  0,  39,  0,  0, 'R', 'N', 'N', 'N', 'R', 'FOREIGN', 'N', 'N', 'N', 'Y',  0,   0,  'N',  2  )
 INSERT kplus..KdbLocalFieldsT VALUES (
  @KdbTables_Id_Kustom, 0, 'DealType',  'DealType',  0,  4,  0,  0, 32,  0,  0,  0,  0,  0,  0,  1,  1,  0,  2,  1, 'N',  NULL,  NULL  )
 INSERT kplus..KdbLocalFieldsT VALUES (
@@ -1605,7 +1672,7 @@ DECLARE @KdbTables_Id_Version int
 
 SELECT @KdbTables_Id_Version = T.KdbTables_Id 
 FROM   kplus..KdbTables T 
-WHERE  T.KdbTables_Name    = 'KustomRussianReposDataVer' 
+WHERE  T.KdbTables_Name    = 'KustomRUKON_RepoDealsVer' 
 AND    T.KdbDatabases_Id   = @KdbDatabases_Id_Version 
 
 
@@ -1628,7 +1695,7 @@ DELETE kplus..KdbLocalTablesT
 WHERE KdbLocalTables_Id = @KdbTables_Id_Version 
 
 INSERT kplus..KdbLocalTablesT Values (
-@KdbTables_Id_Version, 'KustomRussianReposDataVer', 'RussianReposDataVer Kustom',  @KdbDatabases_Id_Version,  0,  48, 'O', 'D', 'FOREIGN',  0,  39,  0,  0, 'R', 'N', 'N', 'N', 'R', 'FOREIGN', 'N', 'N', 'N', 'Y',  0,   0,  'N',  2  )
+@KdbTables_Id_Version, 'KustomRUKON_RepoDealsVer', 'RUKON_RepoDealsVer Kustom',  @KdbDatabases_Id_Version,  0,  48, 'O', 'D', 'FOREIGN',  0,  39,  0,  0, 'R', 'N', 'N', 'N', 'R', 'FOREIGN', 'N', 'N', 'N', 'Y',  0,   0,  'N',  2  )
 INSERT kplus..KdbLocalFieldsT VALUES (
  @KdbTables_Id_Version, 0, 'TransactionId',  'Transaction Id',  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  0,  2,  1, 'N',  NULL,  NULL  )
 INSERT kplus..KdbLocalFieldsT VALUES (
