@@ -57,7 +57,8 @@ create PROC dbo.RUKON_RepoDealsProcess
   -- @Trigger                               varchar(32),
   @Haircut                               float,
   @CapturedDiscount                      char(1),
-  @Cur                                   int
+  @Cur                                   int,
+  @CurCw				 varchar(3)
 )
 as
 begin
@@ -96,7 +97,9 @@ begin
   @Currencies_Id_Price          int,
   @Currencies_ShortName        varchar(3),
   @Message                     varchar(200),
-  @Help                        float
+  @Help                        float,
+  @ConversionRateWA            float,
+  @CurCw_Id                    int
 
   /* BY PDA. Currency Conversion handling, to be reviewed.
      -- ????????? ???????? ????: ???? ???? ?????? ???? ? ?????? ?????? Indirect, ?? ????????Я????? ConversionRate
@@ -115,6 +118,16 @@ begin
   */
 
   -- Discount vs Haircut handing
+  ----------------------------------------------
+  select @CurCw_Id=Currencies_Id from kplus..Currencies where Currencies_ShortName=@CurCw
+  if (@CurCw_Id = @Cur)
+  begin
+    select @ConversionRateWA=@ConversionRate
+  end else 
+  begin
+    select @ConversionRateWA=1.0
+  end
+
 
   if (@CapturedDiscount = "H")
   begin
@@ -581,7 +594,7 @@ select @Currencies_Id_Price = @Currencies_Id
       DirtyPrice        = @outAccrued + @Price,
       GrossAmount       = dbo.RUKON_Round(@outGrossAmount*@ConversionRate, 2),
       AccruedAmount     = dbo.RUKON_Round(@outAccruedAmount*@ConversionRate, 2),
-      WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@Mult*@ConversionRate, 2),
+      WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@Mult*@ConversionRateWA, 2),
       ForwardPrice      = @outDirtyPrice2 - @outAccrued2,
       Accrued2          = @outAccrued2,
       DirtyPrice2       = @outDirtyPrice2,
@@ -748,7 +761,7 @@ select @Currencies_Id_Price = @Currencies_Id
        DirtyPrice        = @Price,
        GrossAmount1       = dbo.RUKON_Round(@outGrossAmount*@ConversionRate, 2),
        AccruedAmount     = 0,
-       WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@ConversionRate*@Mult, 2),
+       WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@ConversionRateWA*@Mult, 2),
        ForwardPrice2      = @outDirtyPrice2/@ConversionRate, -- переводим в валюту цены
        Accrued2          = 0,
        DirtyPrice2       = @outDirtyPrice2,
@@ -921,7 +934,8 @@ select @Currencies_Id_Price = @Currencies_Id
       DirtyPrice        = @outAccrued + @Price,
       GrossAmount1      = dbo.RUKON_Round(@outGrossAmount*@ConversionRate, 2),
       AccruedCash     = dbo.RUKON_Round(@outAccruedAmount*@ConversionRate, 2),
-      WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@ConversionRate, 2),
+--      WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@ConversionRate, 2),
+      WeightedAmount    = dbo.RUKON_Round(@outGrossAmount*@ConversionRateWA, 2),
       ForwardPrice2      = @outForwardPrice,
       Accrued2          = @outAccrued2,
       DirtyPrice2       = @outDirtyPrice2,
@@ -1134,7 +1148,7 @@ select
   @Pid
 from  #RepoCashFlows
 
-select "comment"=" notify, deald "+convert(varchar(15),@Deals_Id) + " pid: "+convert(varchar(15),@Pid)
+--select "Comments"=" notify, deald "+convert(varchar(15),@Deals_Id) + " pid: "+convert(varchar(15),@Pid) +" "+@CurCw+" "+@FwdPriceMethod
 select "RRPid"=@Pid
 select "RRDFUpd"="N"
 
